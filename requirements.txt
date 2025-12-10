@@ -1,6 +1,8 @@
 # Core Streamlit and Web Framework
 streamlit==1.45.1
+streamlit-folium==0.25.3
 altair==5.5.0
+contextily==1.7.0
 
 # Data Processing and Analysis
 pandas==2.2.3
