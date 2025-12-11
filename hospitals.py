@@ -190,7 +190,7 @@ m.get_root().html.add_child(folium.Element(legend_html))
 
 # Add title
 title_html = f'''
-<div style="position: fixed; top: 10px; left: 70%; transform: translateX(-50%); z-index: 9999;
+<div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999;
             background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-family: Arial, sans-serif;">
     <h3 style="margin: 0; color: #1d3557;">{municipality} – Healthcare Facilities</h3>
