@@ -4,6 +4,7 @@ import folium
 import streamlit as st
 from folium import FeatureGroup, CircleMarker, PolyLine
 from streamlit_folium import st_folium
+from shapely.geometry import Point
 
 from src.utils import normalize, find_municipality_match, load_poly, load_schools, extract_name
 
@@ -14,6 +15,8 @@ st.markdown("")
 
 schools = load_schools()
 poly = load_poly()
+schools['geometry'] = schools.apply(lambda x: Point(x['lon'], x['lat']), axis=1)
+schools = gpd.GeoDataFrame(schools, geometry='geometry')
 schools = schools.to_crs(poly.crs)
 schools = schools.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
 

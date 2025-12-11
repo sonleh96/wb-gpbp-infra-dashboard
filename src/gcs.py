@@ -42,3 +42,25 @@ def read_geojson_from_gcs(
     blob = bucket.blob(file_path)
     data = blob.download_as_bytes()
     return gpd.read_file(BytesIO(data))
+
+@st.cache_data(ttl=3600)
+def read_csv_from_gcs(
+    _storage_client: storage.Client, bucket_name: str, file_path: str, **kwargs: Any
+) -> pd.DataFrame:
+    """
+    Read a CSV file from Google Cloud Storage into a pandas DataFrame.
+    Results are cached for 1 hour using Streamlit's caching mechanism.
+    
+    Args:
+        _storage_client (storage.Client): Authenticated GCS client.
+        bucket_name (str): Name of the GCS bucket.
+        file_path (str): Path to the CSV file in the bucket.
+        **kwargs: Additional arguments passed to pd.read_csv.
+        
+    Returns:
+        pd.DataFrame: The loaded DataFrame.
+    """
+    bucket = _storage_client.bucket(bucket_name)
+    blob = bucket.blob(file_path)
+    data = blob.download_as_bytes()
+    return pd.read_csv(BytesIO(data), **kwargs)

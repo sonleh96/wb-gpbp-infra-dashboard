@@ -6,7 +6,7 @@ from google.oauth2 import service_account
 from google.cloud import storage
 import streamlit as st
 
-from src.gcs import read_geojson_from_gcs
+from src.gcs import read_geojson_from_gcs, read_csv_from_gcs
 
 
 # --- Initialization ---
@@ -52,7 +52,7 @@ def load_stations():
 @st.cache_data
 def load_schools():
     """Load schools (cached)."""
-    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/school_assets.geojson")
+    return read_csv_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/school_assets.csv")
 
 
 @st.cache_data
