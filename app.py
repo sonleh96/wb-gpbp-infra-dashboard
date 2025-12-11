@@ -38,6 +38,7 @@ def init_gcs_client():
 storage_client = init_gcs_client()
 pimpam_logo = get_image_from_gcs(storage_client, BUCKET_NAME, "decision_engine/inputs/wbg-pimpam.png")
 
+
 with st.sidebar:
     st.image(pimpam_logo, use_container_width=True)
     # st.image("images/GPBP Logo.png", use_container_width=True)
@@ -51,7 +52,10 @@ pages = {
         st.Page("rails.py", title="Rail Infrastructure")
         ,
         st.Page("roads.py", title="Road Infrastructure")
-
+        ,
+        st.Page("schools.py", title="Schools")
+        ,
+        st.Page("hospitals.py", title="Hospitals")
     ]
 }
 

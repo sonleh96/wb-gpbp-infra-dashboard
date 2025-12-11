@@ -50,6 +50,18 @@ def load_stations():
 
 
 @st.cache_data
+def load_schools():
+    """Load schools (cached)."""
+    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/school_assets.json")
+
+
+@st.cache_data
+def load_hospitals():
+    """Load hospitals (cached)."""
+    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/hospital_assets.json")
+
+
+@st.cache_data
 def load_roads():
     """Load roads (cached)."""
     return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/roads_final.geojson")
@@ -88,3 +100,9 @@ def find_municipality_match(input_text: str, name_lookup: Dict[str, str]) -> Lis
         matches = [name_lookup[k] for k in close_keys]
     
     return matches
+
+def extract_name(tags):
+    try:
+        return tags['name']
+    except:
+        return "Name not available"
