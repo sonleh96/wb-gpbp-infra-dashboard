@@ -17,7 +17,7 @@ schools = load_schools()
 poly = load_poly()
 schools['geometry'] = schools.apply(lambda x: Point(x['lon'], x['lat']), axis=1)
 schools = gpd.GeoDataFrame(schools, geometry='geometry')
-schools = schools.to_crs(poly.crs)
+schools = schools.set_crs(poly.crs)
 schools = schools.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
 
 # --- Global Sidebar: Municipality Selector ---
