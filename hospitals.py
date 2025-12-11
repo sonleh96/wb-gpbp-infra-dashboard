@@ -7,14 +7,6 @@ from streamlit_folium import st_folium
 
 from src.utils import normalize, find_municipality_match, load_poly, load_hospitals, extract_name
 
-
-st.set_page_config(
-    page_title="Healthcare Facilities",
-    page_icon="🏥",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)   
-
 st.header("Healthcare Facilities")
 st.markdown("")
 st.markdown("")

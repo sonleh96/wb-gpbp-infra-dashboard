@@ -7,13 +7,6 @@ from streamlit_folium import st_folium
 
 from src.utils import normalize, find_municipality_match, load_poly, load_rails, load_stations
 
-st.set_page_config(
-    page_title="Rail Infrastructure",
-    page_icon="🚂",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 st.header("Rail Infrastructure")
 st.markdown("")
 st.markdown("")

@@ -6,13 +6,6 @@ from streamlit_folium import st_folium
 
 from src.utils import normalize, find_municipality_match, load_poly, load_roads
 
-st.set_page_config(
-    page_title="Road Infrastructure",
-    page_icon="🚗",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 st.header("Road Infrastructure")
 st.markdown("")
 st.markdown("")

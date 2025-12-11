@@ -7,14 +7,6 @@ from streamlit_folium import st_folium
 
 from src.utils import normalize, find_municipality_match, load_poly, load_schools, extract_name
 
-
-st.set_page_config(
-    page_title="Schools and Universities",
-    page_icon="🏫",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 st.header("Schools & Universities")
 
 st.markdown("")
