@@ -52,13 +52,13 @@ def load_stations():
 @st.cache_data
 def load_schools():
     """Load schools (cached)."""
-    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/school_assets.json")
+    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/school_assets.geojson")
 
 
 @st.cache_data
 def load_hospitals():
     """Load hospitals (cached)."""
-    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/hospital_assets.json")
+    return read_geojson_from_gcs(storage_client, "wb-gpbp-infra-dashboard", "shapefiles/hospital_assets.geojson")
 
 
 @st.cache_data
