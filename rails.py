@@ -15,11 +15,16 @@ st.set_page_config(
 )
 
 st.header("Rail Infrastructure")
-
+st.markdown("")
+st.markdown("")
 
 rails = load_rails()
-stations = load_stations()
 poly = load_poly()
+stations = load_stations()
+rails = rails.to_crs(poly.crs)
+stations = stations.to_crs(poly.crs)
+rails = rails.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
+stations = stations.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
 
 # --- Global Sidebar: Municipality Selector ---
 if 'highlight_municipality' not in st.session_state:
@@ -48,6 +53,45 @@ with st.sidebar:
             st.warning(f"No match found. Try typing part of the name or removing accents. (showing: **{st.session_state.valid_municipality}**)")
 
 municipality = st.session_state.valid_municipality
+rails = rails.to_crs(epsg=3857)
+total_length = rails.length.sum() / 1000  # Convert to kilometers
+total_stations = len(stations)
+total_bridges = len(rails[rails['bridge'] == 'T'])
+total_tunnels = len(rails[rails['tunnel'] == 'T'])
+
+muni_r = rails[rails['Municipality'] == municipality]
+muni_s = stations[stations['Municipality'] == municipality]
+muni_length = (muni_r.length.sum() / 1000) if not muni_r.empty else 0  # Convert to kilometers
+muni_stations = len(muni_s) if not muni_s.empty else 0
+muni_bridges = len(muni_r[muni_r['bridge'] == 'T']) if not muni_r.empty else 0
+muni_tunnels = len(muni_r[muni_r['tunnel'] == 'T']) if not muni_r.empty else 0
+
+st.subheader("**National overview**")
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.markdown(f"**Railway length:** {total_length:.2f} km")
+with col2:
+    st.markdown(f"**Number of stations:** {total_stations}")
+with col3:
+    st.markdown(f"**Number of railway bridges:** {total_bridges}")
+with col4:
+    st.markdown(f"**Number of railway tunnels:** {total_tunnels}")
+
+st.subheader(f"**{municipality} overview**")
+col5, col6, col7, col8 = st.columns(4)
+with col5:
+    st.markdown(f"**Railway length:** {muni_length:.2f} km")
+with col6:
+    st.markdown(f"**Number of stations:** {muni_stations}")
+with col7:
+    st.markdown(f"**Number of railway bridges:** {muni_bridges}")
+with col8:
+    st.markdown(f"**Number of railway tunnels:** {muni_tunnels}")
+    
+st.markdown("")
+st.markdown("")
+
+rails = rails.to_crs(poly.crs)
 
 poly_plot = poly[poly['Municipality'] == municipality]
 rails_plot = rails.sjoin(poly_plot, how='inner', predicate='intersects')
@@ -186,7 +230,7 @@ m.get_root().html.add_child(folium.Element(legend_html))
 
 # Add title
 title_html = f'''
-<div style="position: fixed; top: 10px; left: 30%; transform: translateX(-50%); z-index: 9999;
+<div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999;
             background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-family: Arial, sans-serif;">
     <h3 style="margin: 0; color: #1d3557;">{municipality} – Railway Network via OSM</h3>
@@ -195,4 +239,4 @@ title_html = f'''
 '''
 m.get_root().html.add_child(folium.Element(title_html))
 
-st_folium(m, height=1500, use_container_width=True)
+st_folium(m, height=1500, use_container_width=True, returned_objects=[])

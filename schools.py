@@ -188,4 +188,4 @@ title_html = f'''
 '''
 m.get_root().html.add_child(folium.Element(title_html))
 
-st_folium(m, height=1500, use_container_width=True)
+st_folium(m, height=1500, use_container_width=True, returned_objects=[])
