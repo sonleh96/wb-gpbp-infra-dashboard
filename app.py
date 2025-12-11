@@ -53,9 +53,9 @@ pages = {
         ,
         st.Page("roads.py", title="Road Infrastructure")
         ,
-        st.Page("schools.py", title="Schools")
+        st.Page("schools.py", title="Schools and Universities")
         ,
-        st.Page("hospitals.py", title="Hospitals")
+        st.Page("hospitals.py", title="Healthcare Facilities")
     ]
 }
 

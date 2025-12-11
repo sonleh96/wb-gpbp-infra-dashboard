@@ -9,16 +9,21 @@ from src.utils import normalize, find_municipality_match, load_poly, load_school
 
 
 st.set_page_config(
-    page_title="Schools",
+    page_title="Schools and Universities",
     page_icon="🏫",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-st.header("Schools")
+st.header("Schools & Universities")
+
+st.markdown("")
+st.markdown("")
 
 schools = load_schools()
 poly = load_poly()
+schools = schools.to_crs(poly.crs)
+schools = schools.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
 
 # --- Global Sidebar: Municipality Selector ---
 if 'highlight_municipality' not in st.session_state:
@@ -48,6 +53,31 @@ with st.sidebar:
             
 municipality = st.session_state.valid_municipality
 
+total_schools_count = len(schools[schools['type'] == 'school'])
+total_universities_count = len(schools[schools['type'] == 'university'])
+
+muni_schools = schools[schools['Municipality'] == municipality]
+muni_schools_count = len(muni_schools[muni_schools['type'] == 'school'])
+muni_universities_count = len(muni_schools[muni_schools['type'] == 'university'])
+
+st.subheader("**National overview**")
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown(f"**Number of Schools:** {total_schools_count}")
+with col2:
+    st.markdown(f"**Number of Universities:** {total_universities_count}")
+    
+    
+st.subheader("**Municipality overview**")
+col3, col4 = st.columns(2)
+with col3:
+    st.markdown(f"**Number of Schools:** {muni_schools_count}")
+with col4:
+    st.markdown(f"**Number of Universities:** {muni_universities_count}")
+
+st.markdown("")
+st.markdown("")
+    
 poly_plot = poly[poly['Municipality'] == municipality]
 schools_plot = schools.sjoin(poly_plot, how='inner', predicate='intersects')
 
@@ -66,6 +96,8 @@ if poly_plot.empty:
         for m in list(available)[:10]:
             print(f"  - {m}")
     raise ValueError(f"Municipality '{municipality}' not found in the data. Please check the spelling.")
+
+
 
 schools_plot = schools.sjoin(poly_plot, how='inner', predicate='intersects')
 
@@ -179,7 +211,7 @@ m.get_root().html.add_child(folium.Element(legend_html))
 
 # Add title
 title_html = f'''
-<div style="position: fixed; top: 10px; left: 70%; transform: translateX(-50%); z-index: 9999;
+<div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 9999;
             background: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-family: Arial, sans-serif;">
     <h3 style="margin: 0; color: #1d3557;">{municipality} – Schools & Universities</h3>

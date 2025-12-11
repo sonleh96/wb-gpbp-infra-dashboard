@@ -9,16 +9,20 @@ from src.utils import normalize, find_municipality_match, load_poly, load_hospit
 
 
 st.set_page_config(
-    page_title="Hospitals",
+    page_title="Healthcare Facilities",
     page_icon="🏥",
     layout="wide",
     initial_sidebar_state="expanded"
 )   
 
-st.header("Hospitals")
+st.header("Healthcare Facilities")
+st.markdown("")
+st.markdown("")
 
 hospitals = load_hospitals()
 poly = load_poly()
+hospitals = hospitals.to_crs(poly.crs)
+hospitals = hospitals.sjoin(poly, how='inner', predicate='intersects').drop(columns=['index_right'])
 
 # --- Global Sidebar: Municipality Selector ---
 if 'highlight_municipality' not in st.session_state:
@@ -47,6 +51,31 @@ with st.sidebar:
             st.warning(f"No match found. Try typing part of the name or removing accents. (showing: **{st.session_state.valid_municipality}**)")
             
 municipality = st.session_state.valid_municipality
+
+total_hospitals_count = len(hospitals[hospitals['type'] == 'hospital'])
+total_clinics_count = len(hospitals[hospitals['type'] == 'clinic'])
+
+muni_hospitals = hospitals[hospitals['Municipality'] == municipality]
+muni_hospitals_count = len(muni_hospitals[muni_hospitals['type'] == 'hospital'])
+muni_clinics_count = len(muni_hospitals[muni_hospitals['type'] == 'clinic'])
+
+st.subheader("**National overview**")
+col1, col2 = st.columns(2)
+with col1:
+    st.markdown(f"**Number of Hospitals:** {total_hospitals_count}")
+with col2:
+    st.markdown(f"**Number of Clinics:** {total_clinics_count}")
+    
+st.subheader("**Municipality overview**")
+col3, col4 = st.columns(2)
+
+with col3:
+    st.markdown(f"**Number of Hospitals:** {muni_hospitals_count}")
+with col4:
+    st.markdown(f"**Number of Clinics:** {muni_clinics_count}")
+    
+st.markdown("")
+st.markdown("")
 
 poly_plot = poly[poly['Municipality'] == municipality]
 hospitals_plot = hospitals.sjoin(poly_plot, how='inner', predicate='intersects')
