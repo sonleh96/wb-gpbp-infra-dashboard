@@ -26,7 +26,6 @@ with st.sidebar:
     st.markdown("### 🔎 Municipality selector")
     st.text_input(
         "Highlight a municipality (you can type partial or accent-free name, e.g., sabac or Nis):",
-        value=st.session_state.highlight_municipality,
         placeholder="e.g., sabac or Nis",
         key="highlight_municipality"
     )
